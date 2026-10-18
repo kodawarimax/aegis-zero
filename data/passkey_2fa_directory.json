@@ -1,0 +1,174 @@
+{
+  "services": {
+    "google.com": {
+      "name": "Google / Gmail",
+      "category": "email_identity",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "Advanced Protection Program (パスキー/物理キー必須化) 推奨"
+    },
+    "proton.me": {
+      "name": "Proton Mail / SimpleLogin",
+      "category": "email_identity",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": true,
+      "supports_sms": false,
+      "notes": "基幹アイデンティティおよびエイリアスファイアウォール基盤"
+    },
+    "apple.com": {
+      "name": "Apple ID / iCloud",
+      "category": "email_identity",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": false,
+      "supports_sms": true,
+      "notes": "Security Keys for Apple ID (YubiKey 2本登録) でSMSフォールバック遮断可能"
+    },
+    "sbisec.co.jp": {
+      "name": "SBI証券",
+      "category": "securities",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "FIDO2(パスキー)/デバイス認証必須。口座乗っ取り多発領域のため専用エイリアス必須"
+    },
+    "rakuten-sec.co.jp": {
+      "name": "楽天証券",
+      "category": "securities",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": false,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "パスキー認証および出金時二要素認証の強制化が必須"
+    },
+    "monex.co.jp": {
+      "name": "マネックス証券",
+      "category": "securities",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": false,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "パスキー/ワンタイムパスワード必須"
+    },
+    "gmo-aozora.com": {
+      "name": "GMOあおぞらネット銀行",
+      "category": "banking",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": false,
+      "supports_hardware_key": false,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "認証アプリによるトランザクション署名必須・APIトークン権限分離"
+    },
+    "netbk.co.jp": {
+      "name": "住信SBIネット銀行",
+      "category": "banking",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": false,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "スマート認証NEO(生体認証/FIDO準拠)必須。SMS認証へのダウングレード禁止"
+    },
+    "mufg.jp": {
+      "name": "三菱UFJ銀行",
+      "category": "banking",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": false,
+      "supports_hardware_key": false,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "ワンタイムパスワードアプリ必須・振込限度額の最小化推奨"
+    },
+    "binance.com": {
+      "name": "Binance",
+      "category": "crypto_exchange",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "パスキー/YubiKey + 出金アドレスホワイトリスト固定が必須"
+    },
+    "bitbank.cc": {
+      "name": "bitbank",
+      "category": "crypto_exchange",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": false,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "パスキー + TOTP併用推奨"
+    },
+    "coincheck.com": {
+      "name": "Coincheck",
+      "category": "crypto_exchange",
+      "recommended_zone": "ZONE_0_NUCLEAR",
+      "supports_passkey": true,
+      "supports_hardware_key": false,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "パスキー + TOTP必須、長期保有分はSafeマルチシグ/ハードウェアウォレットへ移動推奨"
+    },
+    "github.com": {
+      "name": "GitHub",
+      "category": "developer_infra",
+      "recommended_zone": "ZONE_1_GUARDED",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": true,
+      "supports_sms": false,
+      "notes": "Passkey + Secretive (Secure Enclave SSH署名) 必須"
+    },
+    "aws.amazon.com": {
+      "name": "Amazon Web Services (AWS)",
+      "category": "developer_infra",
+      "recommended_zone": "ZONE_1_GUARDED",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": true,
+      "supports_sms": false,
+      "notes": "RootアカウントはYubiKey/Passkey必須・平文IAMキー廃止"
+    },
+    "cloudflare.com": {
+      "name": "Cloudflare",
+      "category": "developer_infra",
+      "recommended_zone": "ZONE_1_GUARDED",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": true,
+      "supports_sms": false,
+      "notes": "DNS乗っ取り防止のためハードウェアキー/パスキー必須"
+    },
+    "x.com": {
+      "name": "X (Twitter)",
+      "category": "sns_marketing",
+      "recommended_zone": "ZONE_1_GUARDED",
+      "supports_passkey": true,
+      "supports_hardware_key": true,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "パスキー対応済み。SMS 2FAはSIMスワップ危険のため無効化必須"
+    },
+    "amazon.co.jp": {
+      "name": "Amazon.co.jp",
+      "category": "ecommerce",
+      "recommended_zone": "ZONE_2_EPHEMERAL",
+      "supports_passkey": true,
+      "supports_hardware_key": false,
+      "supports_totp": true,
+      "supports_sms": true,
+      "notes": "パスキー + TOTP設定、金融系と同じメールアドレスの共用を禁止"
+    }
+  }
+}

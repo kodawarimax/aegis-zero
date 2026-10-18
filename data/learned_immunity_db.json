@@ -1,0 +1,17 @@
+{
+  "last_research_timestamp": "2026-10-18T04:34:43.372655+00:00",
+  "researched_threat_advisories": 5,
+  "adversarial_mutations_tested": 20,
+  "adversarial_mutations_blocked": 20,
+  "nfkc_homoglyph_evasion_tested": 5,
+  "nfkc_homoglyph_evasion_blocked": 5,
+  "self_play_defense_rate": 1.0,
+  "synthesized_antibody_count": 20,
+  "threat_categories_covered": [
+    "AI_MCP_TOOL_POISONING",
+    "MARKDOWN_ZERO_CLICK_EXFIL",
+    "MULTILINGUAL_JP_OVERRIDE",
+    "PERMIT2_UNLIMITED_DRAINER",
+    "UNICODE_TAG_SMUGGLING"
+  ]
+}

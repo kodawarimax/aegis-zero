@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Aegis-Zero Browser Guard</title>
+  <style>
+    body {
+      width: 380px;
+      margin: 0;
+      padding: 14px;
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+      font-size: 12px;
+    }
+    h1 {
+      font-size: 14px;
+      margin: 0 0 6px 0;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .badge {
+      background: #065f46;
+      color: #6ee7b7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    .btn {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .btn-primary {
+      background: #0284c7;
+      color: white;
+    }
+    .btn-remediate {
+      background: #10b981;
+      color: #022c22;
+    }
+    .issue-item {
+      border-left: 3px solid #f59e0b;
+      padding-left: 8px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    <span>🛡️ Aegis Sovereign Guard</span>
+    <span class="badge">中国通信遮断・ローカル隔離</span>
+  </h1>
+  <div style="color:#94a3b8; font-size:11px;">
+    Webフォームの「任意チェック初期ON（ダークパターン）」「PII露出」「隠しAIインジェクション・ROT13・分割攻撃」を検査・自動修復します。
+  </div>
+
+  <div class="card" id="scan-status">
+    ページを検査中...
+  </div>
+
+  <button class="btn btn-remediate" id="btn-remediate">
+    ✨ 任意チェック自動OFF ＆ フォーム保護を1クリック適用
+  </button>
+  <button class="btn btn-primary" id="btn-rescan">
+    🔄 現在のページを再スキャン
+  </button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

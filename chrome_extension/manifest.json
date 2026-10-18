@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Aegis-Zero Sovereign Browser Guard (二重脳AI & フォーム保護)",
+  "version": "3.0.0",
+  "description": "国内・ローカル完全隔離型ブラウザ防御拡張：隠しプロンプトインジェクション無害化、任意同意ダークパターン自動OFF、個人情報/秘密鍵ペースト自動消去、AIブラウザ操作暴走ロック。",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8765/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Aegis-Zero Browser Guard",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
