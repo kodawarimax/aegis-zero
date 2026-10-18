@@ -42,6 +42,7 @@ from .deepseek_advisor import DeepSeekV4FlashAdvisor
 from .importer import ZeroKnowledgeCSVImporter
 from .japan_blindspots import JapanSecurityBlindspotAuditor
 from .mac_live_scanner import LiveFileHoneyTrapManager, RealMacSecurityScanner
+from .malware_guard import AllInOneMalwareGuard
 from .models import AccountRecord
 from .threat_researcher import AutonomousThreatResearcher
 
@@ -577,6 +578,7 @@ class AegisAppState:
         self.deepseek_advisor = DeepSeekV4FlashAdvisor()
         self.researcher = AutonomousThreatResearcher()
         self.jp_auditor = JapanSecurityBlindspotAuditor()
+        self.malware_guard = AllInOneMalwareGuard()
         self.profiler = AttackerProfiler()
         self.evidence_log = EvidenceLog(path=evidence_path)
         self.notifier = AlertNotifier(mac_notify=self.trap_manager.send_macos_notification)
@@ -865,6 +867,8 @@ def create_request_handler(state: AegisAppState):
                 status_payload = state.deepseek_advisor.get_silent_background_daemon_status()
                 status_payload["silent_notifier_digest_count"] = len(state.notifier.silent_digest_queue)
                 self._send_json(status_payload)
+            elif parsed.path == "/api/malware-guard/status":
+                self._send_json(state.malware_guard.run_unified_scan())
             elif parsed.path == "/api/trap-beacon":
                 token = qs.get("token", ["unknown"])[0]
                 client_ip = self.client_address[0]
@@ -993,6 +997,23 @@ def create_request_handler(state: AegisAppState):
                     dom_payload, known_secrets=known, actor_authority=authority
                 )
                 self._send_json(res)
+            elif parsed.path == "/api/malware-guard/scan":
+                try:
+                    req_data = json.loads(body) if body.strip() else {}
+                except json.JSONDecodeError:
+                    self._send_json({"error": "Invalid JSON payload"}, status=400)
+                    return
+                if not isinstance(req_data, dict):
+                    self._send_json({"error": "Payload must be JSON object"}, status=400)
+                    return
+                scan_res = state.malware_guard.run_unified_scan(
+                    sample_files=req_data.get("sample_files"),
+                    persistence_plists=req_data.get("persistence_plists"),
+                    outbound_connections=req_data.get("outbound_connections"),
+                    clipboard_check=req_data.get("clipboard_check"),
+                    dom_payload=req_data.get("dom_payload"),
+                )
+                self._send_json(scan_res)
             elif parsed.path == "/api/research-self-train":
                 summary = state.researcher.run_autonomous_research_and_self_training(
                     state.immune, include_online_cisa=False

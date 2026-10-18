@@ -252,6 +252,30 @@ function scanCurrentPageDOM(autoRemediate = false) {
     }
   });
 
+  // 5. Rogueware & Tech Support Scam Shield (modeled on uBlock Origin / Malwarebytes Browser Guard)
+  const scamWarningRe = /(?:トロイの木馬に感染|ウイルスが検出されました|システムが破損しています|Windows\s*Defender\s*セキュリティ警告|Apple\s*セキュリティ警告|このPCへのアクセスはセキュリティ上の理由でブロック|今すぐ(?:Microsoft|Apple|サポート)へ(?:電話|連絡)|ブラウザを閉じないでください)/gi;
+  const scamPhoneRe = /(?:0101-\d{3}-\d{3,4}|\+1-8(?:00|88|77|66)-\d{3}-\d{4}|050-\d{4}-\d{4})/;
+  const scamMatches = visibleText.match(scamWarningRe) || [];
+  const hasScamPhone = scamPhoneRe.test(visibleText);
+  const hasBeforeUnloadTrap = typeof window.onbeforeunload === "function";
+  if ((scamMatches.length >= 1 && (hasScamPhone || hasBeforeUnloadTrap)) || scamMatches.length >= 2) {
+    issues.push({
+      id: "DOM-ROGUEWARE-SCAM-01",
+      severity: "CRITICAL",
+      title: "偽ウイルス警告・サポート詐欺（ローグウェア）画面を検出",
+      detail: "偽の感染警告と電話誘導によるサポート詐欺ページです。実際のPCは感染していません。"
+    });
+    if (autoRemediate) {
+      try {
+        window.onbeforeunload = null;
+        if (document.fullscreenElement && typeof document.exitFullscreen === "function") {
+          document.exitFullscreen().catch(() => {});
+        }
+      } catch (_) {}
+      actions.push("サポート詐欺ページの画面ロック(onbeforeunload/全画面トラップ)を解除しました");
+    }
+  }
+
   return {
     url: window.location.href,
     title: document.title,

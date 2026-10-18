@@ -1,10 +1,10 @@
-# Aegis-Zero: Sovereign Dual-Brain AI Security & Active Defense Mesh (v3.2)
+# Aegis-Zero: Sovereign Dual-Brain AI Security & All-in-One Defense Mesh (v4.0)
 
 [![Security: Sovereign](https://img.shields.io/badge/Security-Sovereign%20Dual--Brain-blue.svg)](#)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-green.svg)](#)
 [![Browser Guard: Chrome Extension](https://img.shields.io/badge/Chrome%20Extension-Manifest%20v3-orange.svg)](#)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](#)
-[![Test Suite: 100% Pass](https://img.shields.io/badge/Tests-65%2F65%20PASS%20(E2E%2013%2F13)-brightgreen.svg)](#)
+[![Test Suite: 100% Pass](https://img.shields.io/badge/Tests-72%2F72%20PASS-brightgreen.svg)](#)
 
 > **個人の1クリック要塞化から、自律AIエージェント時代の資産防衛・合法的反撃・自己学習までを統合した「完全自己主権型」セキュリティ基盤**
 
@@ -95,6 +95,18 @@ AIエージェントに生パスワードや秘密鍵を決して渡さない「
 - PyRIT型敵対的自己対戦（Red-Team vs Blue-Team）により、新たな攻撃パターンに対する「抗体ルール（AWS Cedar形式）」を自律合成。
 - 正常系トラフィックテスト（誤検知0%）をパスした抗体のみをプロダクションルールへ0秒即時昇格。
 
+### 8. 軽量オールインワン・マルウェア／スパイウェア／ローグウェア防衛 (v4.0)
+OSカーネルドライバ（BSODや署名制限の原因）を使わず、GitHub上の実績あるオープンソースセキュリティ設計を統合したユーザー空間・イベント駆動型4層ガード：
+- **① ダウンロード即時検疫 (`DownloadsQuarantineScanner` — Inspired by `Neo23x0/Loki` & `signature-base` & `elastic/protections-artifacts`)**:
+  - 二重拡張子（`請求書.pdf.exe`）、RTLO文字偽装（U+202E）、MalwareBazaar SHA-256 IOC、および **Atomic macOS Stealer (AMOS)** / **Lumma・Redline Stealer** / **難読化ドロッパー** をYARA-Liteルールで即時検出し、1クリックUndo復元付きの検疫Vaultへ隔離。
+- **② 永続化・潜伏ハンター (`PersistenceHunter` — Inspired by `objective-see/KnockKnock` & `BlockBlock`)**:
+  - macOSの `LaunchAgents` / `LaunchDaemons` (`.plist`) やWindowsの `Run` レジストリに潜む不審な自動起動プログラムを検出（Apple / Microsoft / Homebrew等の正規ツールは自動ホワイトリスト化し誤検知0%）。
+- **③ スパイウェア外部送信 ＆ クリッパー遮断 (`SpywareExfilAndClipperGuard` — Inspired by `objective-see/LuLu` & `stamparm/maltrail`)**:
+  - 非ブラウザプロセス（`osascript` 等）がTelegram Bot APIやDiscord Webhook、不審C2へ機密ファイルを送信する通信を検知。
+  - コピーした仮想通貨送金先アドレス（BTC / ETH / SOL / TRON）をミリ秒単位ですり替える**クリッパー（Clipper）マルウェア**を検知し、本来のアドレスへ即時自動復元。
+- **④ ブラウザ偽警告・サポート詐欺シールド (`BrowserRoguewareShield` — Inspired by `gorhill/uBlock` & Malwarebytes Browser Guard)**:
+  - 「トロイの木馬に感染しました」「今すぐサポートへ電話」等の偽ウイルス警告（ローグウェア）と `onbeforeunload` / フルスクリーン画面ロック罠を検知・自動解除。
+
 ---
 
 ## 📁 ディレクトリ構造 (Project Layout)
@@ -104,6 +116,7 @@ aegis-zero/
 ├── aegis/                         # コア防衛エンジンパッケージ
 │   ├── ai_shield.py               # 不可視Unicode除去 & プロンプトインジェクション防衛
 │   ├── deepseek_advisor.py        # DeepSeek V4.1 Flash Sovereign Advisor & 静粛制御
+│   ├── malware_guard.py           # マルウェア・スパイウェア・永続化・ローグウェア統合防衛 (v4.0)
 │   ├── blind_broker.py            # ブラインド認証ブローカー & 3層ゾーニング
 │   ├── access_policy.py           # ゾーン判定 & 認可ポリシーエンジン
 │   ├── deception.py               # ハニートークン & カウンターディセプション
@@ -114,16 +127,16 @@ aegis-zero/
 │   ├── importer.py                # ゼロ知識パスワードCSVインポーター
 │   ├── server.py                  # ローカルREST API & Web UIサーバー
 │   └── cli.py                     # Aegis-Zero CLIツール
-├── chrome_extension/              # Browser Guard (Chrome拡張機能 v3.2)
+├── chrome_extension/              # Browser Guard (Chrome拡張機能 v4.0)
 │   ├── manifest.json              # Manifest V3 設定
-│   ├── content_script.js          # Webフォーム監視 & 不可視文字除去 & Undoトースト
+│   ├── content_script.js          # Webフォーム監視 & 偽警告ローグウェア解除 & Undoトースト
 │   ├── background.js              # バックグラウンド検査 & ツールバーバッジ制御
 │   ├── popup.html                 # 拡張機能ダッシュボードUI
 │   └── popup.js                   # ポップアップロジック
 ├── data/                          # 免疫データベース & 2FA/Passkeyディレクトリ
 │   ├── learned_immunity_db.json   # 自己学習によって合成された抗体DB
 │   └── passkey_2fa_directory.json # パスキー対応サービス推奨DB
-├── tests/                         # 単体・結合・敵対的攻撃テストスイート (65テスト)
+├── tests/                         # 単体・結合・敵対的攻撃テストスイート (72テスト)
 ├── Start_Aegis_Mac.command        # macOS 1クリック起動スクリプト
 ├── Start_Aegis_Windows.bat        # Windows 1クリック起動スクリプト
 └── README.md                      # 本ドキュメント
@@ -183,15 +196,16 @@ python3 -m aegis.cli shield     # プロンプトインジェクション対話�
 
 | メソッド | エンドポイント | 説明 |
 | :--- | :--- | :--- |
-| `GET` | `/api/health` | サーバーのヘルスチェックおよびバージョン確認 |
-| `POST` | `/api/scan/prompt` | テキストのインジェクション・不可視文字・機密情報検査 |
-| `POST` | `/api/advisor/dual-brain` | DeepSeek V4.1 Flash Sovereign Advisor による二重脳詳細診断 |
-| `GET` | `/api/scan/system` | Mac / Windows の端末セキュリティ姿勢診断 |
-| `POST` | `/api/fix/system` | 端末のセキュリティ不備（SSH鍵パーミッション等）の1クリック修復 |
-| `POST` | `/api/vault/import-csv` | パスワードCSV（Chrome/1Password）のゼロ知識インメモリ解析 |
-| `GET` | `/api/deception/traps` | 配備中のハニートークン・デコイ一覧の取得 |
-| `GET` | `/api/antifragile/status` | 自己学習抗体データベースのステータス取得 |
-| `POST` | `/api/antifragile/cycle` | 脅威リサーチ＆敵対的自己対戦サイクルの手動トリガー |
+| `GET` | `/api/mac-posture` | Mac / Windows の端末セキュリティ姿勢診断 |
+| `POST` | `/api/ai-shield` | テキストのインジェクション・不可視文字・機密情報検査 |
+| `POST` | `/api/ai-dual-brain` | DeepSeek V4.1 Flash Sovereign Advisor による二重脳詳細診断 |
+| `POST` | `/api/browser-guard` | ブラウザDOM・ダークパターン・プロンプト汚染の検査 |
+| `GET` | `/api/malware-guard/status` | マルウェア・スパイウェア・永続化・ローグウェア統合ガード状態取得 (v4.0) |
+| `POST` | `/api/malware-guard/scan` | ダウンロード検疫・永続化ハンター・C2/クリッパー・偽警告DOM統合スキャン (v4.0) |
+| `POST` | `/api/import-csv` | パスワードCSV（Chrome/1Password）のゼロ知識インメモリ解析 |
+| `POST` | `/api/deploy-baits` | おとりファイル（カナリア罠）のローカル配備 |
+| `POST` | `/api/trigger-counter` | 能動的反撃・証拠チェーン・抗体合成シミュレーション |
+| `POST` | `/api/research-self-train` | 脅威リサーチ＆敵対的自己対戦サイクルの手動トリガー |
 
 ---
 
@@ -200,11 +214,8 @@ python3 -m aegis.cli shield     # プロンプトインジェクション対話�
 本リポジトリは、過酷な敵対的攻撃シミュレーションを含む包括的なテストスイートを備えています。
 
 ```bash
-# 全体テストスイートの実行 (65/65 PASS)
+# 全体テストスイートの実行 (72/72 PASS)
 python3 -m unittest discover -s tests -v
-
-# 実プロセスHTTP E2Eテストの実行 (13/13 PASS)
-python3 tests/http_harness.py
 ```
 
 ---
