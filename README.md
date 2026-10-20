@@ -1,10 +1,10 @@
-# Aegis-Zero: Sovereign Dual-Brain AI Security & All-in-One Defense Mesh (v4.0)
+# Aegis-Zero: Sovereign Dual-Brain AI Security & All-in-One Defense Mesh (v4.1)
 
 [![Security: Sovereign](https://img.shields.io/badge/Security-Sovereign%20Dual--Brain-blue.svg)](#)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-green.svg)](#)
 [![Browser Guard: Chrome Extension](https://img.shields.io/badge/Chrome%20Extension-Manifest%20v3-orange.svg)](#)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](#)
-[![Test Suite: 100% Pass](https://img.shields.io/badge/Tests-72%2F72%20PASS-brightgreen.svg)](#)
+[![Test Suite: 100% Pass](https://img.shields.io/badge/Tests-79%2F79%20PASS-brightgreen.svg)](#)
 
 > **個人の1クリック要塞化から、自律AIエージェント時代の資産防衛・合法的反撃・自己学習までを統合した「完全自己主権型」セキュリティ基盤**
 
@@ -107,6 +107,21 @@ OSカーネルドライバ（BSODや署名制限の原因）を使わず、GitHu
 - **④ ブラウザ偽警告・サポート詐欺シールド (`BrowserRoguewareShield` — Inspired by `gorhill/uBlock` & Malwarebytes Browser Guard)**:
   - 「トロイの木馬に感染しました」「今すぐサポートへ電話」等の偽ウイルス警告（ローグウェア）と `onbeforeunload` / フルスクリーン画面ロック罠を検知・自動解除。
 
+### 9. 「日本のセキュリティ問題点」6大構造課題ソルバー (`aegis/jp_structural_guard.py` — v4.1)
+日本の情報システムで頻発する6つの構造的脆弱性を決定論的アルゴリズムで解決します：
+- **① マイナンバーカード12桁表示・露出の遮断 (`MyNumberPrivacyShield`)**:
+  - 総務省令第85号の正式な検査用数字（チェックデジット計算式）により、単なる12桁のタイムスタンプや注文番号を誤破壊せず、真正なマイナンバー12桁だけを自動検出・マスク（`[REDACTED_JP_MYNUMBER_12D]`）し、ゼロ知識ブラインドトークン（`mynum://blind-token/...`）へ分離。
+- **② データ保護とシステム分離 (`DataProtectionAndSeparationVault`)**:
+  - アプリ実行コード領域（`system_root`）と機密データ保存領域（`data_root`）の物理ディレクトリ分離を強制（違反時は `PathSeparationViolationError` で遮断）。保存データは `PBKDF2-HMAC-SHA256 (200,000回)` ＋ `Encrypt-then-MAC (HMAC-SHA256)` で認証付き暗号化。
+- **③ 状態変化チェック ➔ 正常な状態へ自動復元 (`IntegrityCheckAndSelfHealer`)**:
+  - 重要設定・ファイルの暗号学的ゴールデンベースライン（SHA-256＋権限＋圧縮スナップショット）を保持し、不正書き換えやファイル削除（状態変化）を検知した瞬間に0秒で元の正常状態へ自動ロールバック（Self-Healing）。
+- **④ DoS攻撃遮断 ＆ 負荷分散ロードバランシング (`DoSShieldAndLoadBalancer`)**:
+  - IP別トークンバケットによるDoSフラッド遮断（`429 DROP_DOS_FLOOD`）と、複数ワーカーノードへの重み付き最小接続（Weighted Least-Connections）負荷分散・サーキットブレーカーを統合。正規オーナー権限（`PRIVILEGED_OWNER`）は攻撃下でも優先通過。
+- **⑤ ランサムウェア対策：毎時・毎日のイミュータブル世代バックアップ (`ImmutableRansomwareBackupEngine`)**:
+  - 毎時（`HOURLY`）・毎日（`DAILY`）の重複排除スナップショットを読み取り専用（`0400`）で保護。ランサムウェアによる高エントロピー暗号化や `.locked` 拡張子を検知した際は**正常バックアップの上書き汚染を自動ブロック**し、直前のクリーンな毎時スナップショットから完全復元。
+- **⑥ ルータの改造診断 ＆ 悪いパケットは通さないDPIフィルタ (`RouterAndBadPacketFirewall`)**:
+  - ルータの危険設定（WAN管理画面公開、UPnP開放、Telnet有効、不審DNSハイジャック）を診断。さらにTCP Xmas Treeスキャン、NULLスキャン、SYN+FIN不正フラグ、Land攻撃、WAN側Bogon偽装IP、UPnP/HNAPコマンドインジェクション等の「悪いパケット」を即座にドロップし、`pf.conf` 等の遮断ルールを自動生成。
+
 ---
 
 ## 📁 ディレクトリ構造 (Project Layout)
@@ -117,6 +132,7 @@ aegis-zero/
 │   ├── ai_shield.py               # 不可視Unicode除去 & プロンプトインジェクション防衛
 │   ├── deepseek_advisor.py        # DeepSeek V4.1 Flash Sovereign Advisor & 静粛制御
 │   ├── malware_guard.py           # マルウェア・スパイウェア・永続化・ローグウェア統合防衛 (v4.0)
+│   ├── jp_structural_guard.py     # 日本の6大構造的セキュリティ問題ソルバー (v4.1)
 │   ├── blind_broker.py            # ブラインド認証ブローカー & 3層ゾーニング
 │   ├── access_policy.py           # ゾーン判定 & 認可ポリシーエンジン
 │   ├── deception.py               # ハニートークン & カウンターディセプション
@@ -127,16 +143,16 @@ aegis-zero/
 │   ├── importer.py                # ゼロ知識パスワードCSVインポーター
 │   ├── server.py                  # ローカルREST API & Web UIサーバー
 │   └── cli.py                     # Aegis-Zero CLIツール
-├── chrome_extension/              # Browser Guard (Chrome拡張機能 v4.0)
+├── chrome_extension/              # Browser Guard (Chrome拡張機能 v4.1)
 │   ├── manifest.json              # Manifest V3 設定
-│   ├── content_script.js          # Webフォーム監視 & 偽警告ローグウェア解除 & Undoトースト
+│   ├── content_script.js          # Webフォーム監視 & マイナンバー12桁保護 & ローグウェア解除
 │   ├── background.js              # バックグラウンド検査 & ツールバーバッジ制御
 │   ├── popup.html                 # 拡張機能ダッシュボードUI
 │   └── popup.js                   # ポップアップロジック
 ├── data/                          # 免疫データベース & 2FA/Passkeyディレクトリ
 │   ├── learned_immunity_db.json   # 自己学習によって合成された抗体DB
 │   └── passkey_2fa_directory.json # パスキー対応サービス推奨DB
-├── tests/                         # 単体・結合・敵対的攻撃テストスイート (72テスト)
+├── tests/                         # 単体・結合・敵対的攻撃テストスイート (79テスト)
 ├── Start_Aegis_Mac.command        # macOS 1クリック起動スクリプト
 ├── Start_Aegis_Windows.bat        # Windows 1クリック起動スクリプト
 └── README.md                      # 本ドキュメント
@@ -202,6 +218,8 @@ python3 -m aegis.cli shield     # プロンプトインジェクション対話�
 | `POST` | `/api/browser-guard` | ブラウザDOM・ダークパターン・プロンプト汚染の検査 |
 | `GET` | `/api/malware-guard/status` | マルウェア・スパイウェア・永続化・ローグウェア統合ガード状態取得 (v4.0) |
 | `POST` | `/api/malware-guard/scan` | ダウンロード検疫・永続化ハンター・C2/クリッパー・偽警告DOM統合スキャン (v4.0) |
+| `GET` | `/api/jp-structural-guard` | 日本の6大構造的セキュリティ問題（マイナンバー・データ分離・自己修復・DoS分散・毎時バックアップ・悪性パケット遮断）一括診断 (v4.1) |
+| `POST` | `/api/jp-structural-guard` | マイナンバー12桁検査・悪性パケットDPIフィルタ等のカスタム検証 (v4.1) |
 | `POST` | `/api/import-csv` | パスワードCSV（Chrome/1Password）のゼロ知識インメモリ解析 |
 | `POST` | `/api/deploy-baits` | おとりファイル（カナリア罠）のローカル配備 |
 | `POST` | `/api/trigger-counter` | 能動的反撃・証拠チェーン・抗体合成シミュレーション |
@@ -214,7 +232,7 @@ python3 -m aegis.cli shield     # プロンプトインジェクション対話�
 本リポジトリは、過酷な敵対的攻撃シミュレーションを含む包括的なテストスイートを備えています。
 
 ```bash
-# 全体テストスイートの実行 (72/72 PASS)
+# 全体テストスイートの実行 (79/79 PASS)
 python3 -m unittest discover -s tests -v
 ```
 

@@ -41,6 +41,7 @@ from .deception import ActiveDeceptionEngine
 from .deepseek_advisor import DeepSeekV4FlashAdvisor
 from .importer import ZeroKnowledgeCSVImporter
 from .japan_blindspots import JapanSecurityBlindspotAuditor
+from .jp_structural_guard import JapanStructuralSecuritySolver
 from .mac_live_scanner import LiveFileHoneyTrapManager, RealMacSecurityScanner
 from .malware_guard import AllInOneMalwareGuard
 from .models import AccountRecord
@@ -578,6 +579,7 @@ class AegisAppState:
         self.deepseek_advisor = DeepSeekV4FlashAdvisor()
         self.researcher = AutonomousThreatResearcher()
         self.jp_auditor = JapanSecurityBlindspotAuditor()
+        self.jp_structural = JapanStructuralSecuritySolver()
         self.malware_guard = AllInOneMalwareGuard()
         self.profiler = AttackerProfiler()
         self.evidence_log = EvidenceLog(path=evidence_path)
@@ -869,6 +871,8 @@ def create_request_handler(state: AegisAppState):
                 self._send_json(status_payload)
             elif parsed.path == "/api/malware-guard/status":
                 self._send_json(state.malware_guard.run_unified_scan())
+            elif parsed.path == "/api/jp-structural-guard":
+                self._send_json(state.jp_structural.run_all_6_diagnostics())
             elif parsed.path == "/api/trap-beacon":
                 token = qs.get("token", ["unknown"])[0]
                 client_ip = self.client_address[0]
@@ -1014,6 +1018,19 @@ def create_request_handler(state: AegisAppState):
                     dom_payload=req_data.get("dom_payload"),
                 )
                 self._send_json(scan_res)
+            elif parsed.path == "/api/jp-structural-guard":
+                try:
+                    req_data = json.loads(body) if body.strip() else {}
+                except json.JSONDecodeError:
+                    self._send_json({"error": "Invalid JSON payload"}, status=400)
+                    return
+                if not isinstance(req_data, dict):
+                    self._send_json({"error": "Payload must be JSON object"}, status=400)
+                    return
+                res = state.jp_structural.run_all_6_diagnostics(sample_text=req_data.get("text"))
+                if "packet" in req_data and isinstance(req_data["packet"], dict):
+                    res["custom_packet_verdict"] = state.jp_structural.router_firewall.inspect_packet(req_data["packet"])
+                self._send_json(res)
             elif parsed.path == "/api/research-self-train":
                 summary = state.researcher.run_autonomous_research_and_self_training(
                     state.immune, include_online_cisa=False

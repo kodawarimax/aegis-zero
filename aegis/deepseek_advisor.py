@@ -31,6 +31,7 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 from .ai_shield import AISecurityShield
 from .blind_broker import BlindCredentialBroker
+from .jp_structural_guard import MyNumberPrivacyShield
 
 
 CHINA_BLOCKED_HOSTS = (
@@ -451,9 +452,10 @@ class DeepSeekV4FlashAdvisor:
             if secret:
                 scrubbed = BlindCredentialBroker._scrub_secret_variants(scrubbed, secret)
 
-        # Stage 2: Structured PII, JWT, Cards, Phone, API Tokens
+        # Stage 2: Structured PII, JWT, Cards, Phone, API Tokens, and 12-Digit JP My Number
         for label, pat in cls.PII_AND_SECRET_SCRUB_PATTERNS:
             scrubbed = pat.sub(f"[REDACTED_{label}]", scrubbed)
+        scrubbed = MyNumberPrivacyShield().inspect_and_mask(scrubbed)["sanitized_text"]
 
         # Stage 3A: Contextual free-text password declarations (preserves normal questions)
         scrubbed = cls.CONTEXTUAL_JP_QUOTED_OR_COLON_SECRET.sub(r"\1[REDACTED_CONTEXTUAL_SECRET]\3", scrubbed)

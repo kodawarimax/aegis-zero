@@ -51,12 +51,32 @@ const AegisBrowserEngine = (() => {
     return false;
   }
 
+  function isValidJapaneseMyNumber(rawCandidate) {
+    const digits = String(rawCandidate || "").replace(/[-\s]/g, "");
+    if (!/^\d{12}$/.test(digits) || /^(\d)\1{11}$/.test(digits)) return false;
+    let total = 0;
+    for (let n = 1; n <= 11; n++) {
+      const pN = parseInt(digits[11 - n], 10);
+      const qN = n <= 6 ? n + 1 : n - 5;
+      total += pN * qN;
+    }
+    const rem = total % 11;
+    const expected = rem <= 1 ? 0 : 11 - rem;
+    return parseInt(digits[11], 10) === expected;
+  }
+
   function scrubPayloadForLLM(raw) {
     let s = String(raw || "");
+    const hasMyNumKw = /(?:マイナンバー|個人番号|my\s*number|番号確認|通知カード)/i.test(s);
     s = s.replace(/\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b/g, "[REDACTED_JWT_TOKEN]");
     s = s.replace(/\b(?:sk-[a-zA-Z0-9_-]{12,}|ghp_[a-zA-Z0-9]{20,}|AKIA[0-9A-Z]{16}|xox[baprs]-[a-zA-Z0-9-]{10,}|AIza[0-9A-Za-z_-]{35})\b/g, "[REDACTED_API_TOKEN]");
     s = s.replace(/\b0x[a-fA-F0-9]{40,64}\b/g, "[REDACTED_HEX_KEY]");
     s = s.replace(/\b(?:\d{4}[-\s]){3}\d{4}\b/g, "[REDACTED_PAYMENT_CARD]");
+    s = s.replace(/(?<![0-9A-Za-z])(\d{4}[-\s]?\d{4}[-\s]?\d{4})(?![0-9A-Za-z])/g, (m) => {
+      const d = m.replace(/[-\s]/g, "");
+      if (!hasMyNumKw && /^20[2-3]\d(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])/.test(d)) return m;
+      return (isValidJapaneseMyNumber(d) || hasMyNumKw) ? "[REDACTED_JP_MYNUMBER_12D]" : m;
+    });
     s = s.replace(/\b0[1-9]\d{0,3}-\d{2,4}-\d{4}\b/g, "[REDACTED_JP_PHONE]");
     s = s.replace(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/g, "[REDACTED_EMAIL]");
     s = s.replace(/((?:パスワード|暗証番号|合言葉|合い言葉|秘密鍵|シークレット|復号キー|隠しキー)\s*(?:(?:は|が)\s*[「『"']|(?:：|:|=)\s*[「『"']?))([^\s「』"'。、，,？?]{3,64})([」』"']?)/g, "$1[REDACTED_CONTEXTUAL_SECRET]$3");
