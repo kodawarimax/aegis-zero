@@ -45,6 +45,7 @@ from .jp_structural_guard import JapanStructuralSecuritySolver
 from .mac_live_scanner import LiveFileHoneyTrapManager, RealMacSecurityScanner
 from .malware_guard import AllInOneMalwareGuard
 from .models import AccountRecord
+from .nr_npn_model import build_calibrated_aegis_nr_spn
 from .threat_researcher import AutonomousThreatResearcher
 
 
@@ -355,6 +356,17 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </p>
       <pre id="malware-guard-output">読み込み中...</pre>
     </div>
+
+    <div class="card" style="grid-column: 1 / -1;">
+      <h2>
+        <span>🧬 11. 武藤式・自然乱数セミパラメトリックAI頭脳 (NR-SPN v3: Layer 1.5)</span>
+        <button class="btn btn-primary" onclick="loadNrSpnStatus()">⚡ 自然乱数・XOR・ゼロデイOOD実証を実行</button>
+      </h2>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">
+        慶應SFC武藤佳恭教授の1989年Science論文（2値神経運動方程式）・planar.py・nqueen.pyと「高速化の極意」4本柱を融合。①Tukey Biweight 10^6外れ値浄化 ②経験順位×Sigmoidマージン保持 ③多重次数・XORスペクトル重要度 ④エネルギーゲート付きセミパラメトリック推論 ⑤ConformalゼロデイOOD検知 ⑥DoS無交差チャネルルーティング。
+      </p>
+      <pre id="nr-spn-output">読み込み中...</pre>
+    </div>
   </div>
 </div>
 
@@ -583,6 +595,12 @@ async function loadJpStructuralAndMalware() {
   document.getElementById('malware-guard-output').textContent = JSON.stringify(mal, null, 2);
 }
 
+async function loadNrSpnStatus() {
+  const res = await api('/api/nr-spn/status');
+  const data = await res.json();
+  document.getElementById('nr-spn-output').textContent = JSON.stringify(data, null, 2);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   loadMacPosture();
   loadAuditFindings();
@@ -590,6 +608,7 @@ window.addEventListener('DOMContentLoaded', () => {
   runJapanBlindspots();
   loadAccessAndEvidence();
   loadJpStructuralAndMalware();
+  loadNrSpnStatus();
 });
 </script>
 </body>
@@ -615,6 +634,7 @@ class AegisAppState:
         self.jp_auditor = JapanSecurityBlindspotAuditor()
         self.jp_structural = JapanStructuralSecuritySolver()
         self.malware_guard = AllInOneMalwareGuard()
+        self.nr_spn = build_calibrated_aegis_nr_spn()
         self.profiler = AttackerProfiler()
         self.evidence_log = EvidenceLog(path=evidence_path)
         self.notifier = AlertNotifier(mac_notify=self.trap_manager.send_macos_notification)
@@ -907,6 +927,8 @@ def create_request_handler(state: AegisAppState):
                 self._send_json(state.malware_guard.run_unified_scan())
             elif parsed.path == "/api/jp-structural-guard":
                 self._send_json(state.jp_structural.run_all_6_diagnostics())
+            elif parsed.path == "/api/nr-spn/status":
+                self._send_json(state.nr_spn.evaluate_security_telemetry())
             elif parsed.path == "/api/trap-beacon":
                 token = qs.get("token", ["unknown"])[0]
                 client_ip = self.client_address[0]
@@ -1065,6 +1087,17 @@ def create_request_handler(state: AegisAppState):
                 if "packet" in req_data and isinstance(req_data["packet"], dict):
                     res["custom_packet_verdict"] = state.jp_structural.router_firewall.inspect_packet(req_data["packet"])
                 self._send_json(res)
+            elif parsed.path == "/api/nr-spn/evaluate":
+                try:
+                    req_data = json.loads(body) if body.strip() else {}
+                except json.JSONDecodeError:
+                    self._send_json({"error": "Invalid JSON payload"}, status=400)
+                    return
+                if not isinstance(req_data, dict):
+                    self._send_json({"error": "Payload must be JSON object"}, status=400)
+                    return
+                queries = req_data.get("queries")
+                self._send_json(state.nr_spn.evaluate_security_telemetry(custom_queries=queries))
             elif parsed.path == "/api/research-self-train":
                 summary = state.researcher.run_autonomous_research_and_self_training(
                     state.immune, include_online_cisa=False
