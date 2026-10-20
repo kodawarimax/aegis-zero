@@ -331,6 +331,31 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <pre id="evidence-log-output">読み込み中...</pre>
     </div>
   </div>
+
+  <!-- Japan Structural 6-Problem Solver & All-in-One Malware Guard Row (v4.1) -->
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="card">
+      <h2>
+        <span>🇯🇵 9. 「日本のセキュリティ問題点」6大構造課題 解決エンジン (v4.1)</span>
+        <button class="btn btn-success" onclick="loadJpStructuralAndMalware()">🛡️ 6項目を一括検証</button>
+      </h2>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">
+        ①マイナンバー12桁チェックデジット保護 ②データ暗号化＆システム物理分離 ③Integrity状態変化検知➔正常復元 ④DoS負荷分散 ⑤ランサムウェア毎時/毎日バックアップ ⑥ルータ改造＆悪性パケット遮断
+      </p>
+      <pre id="jp-structural-output">読み込み中...</pre>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span>🦠 10. 軽量オールインワン・マルウェア／スパイウェア／偽警告防衛 (v4.0)</span>
+        <button class="btn btn-outline" onclick="loadJpStructuralAndMalware()">🔍 検疫ステータス更新</button>
+      </h2>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">
+        ①ダウンロード即時検疫 (AMOS/Lumma/二重拡張子) ②LaunchAgents/Run永続化ハンター ③C2外部送信＆仮想通貨クリッパー復元 ④ブラウザ偽ウイルス警告・サポート詐欺解除
+      </p>
+      <pre id="malware-guard-output">読み込み中...</pre>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast">コピーしました！</div>
@@ -550,12 +575,21 @@ async function exportSecurityReport() {
   showToast('📄 取引先提出・印刷用「セキュリティ診断レポート」を生成しました');
 }
 
+async function loadJpStructuralAndMalware() {
+  const [jpRes, malRes] = await Promise.all([api('/api/jp-structural-guard'), api('/api/malware-guard/status')]);
+  const jp = await jpRes.json();
+  const mal = await malRes.json();
+  document.getElementById('jp-structural-output').textContent = JSON.stringify(jp, null, 2);
+  document.getElementById('malware-guard-output').textContent = JSON.stringify(mal, null, 2);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   loadMacPosture();
   loadAuditFindings();
   generateHardenedCredentials();
   runJapanBlindspots();
   loadAccessAndEvidence();
+  loadJpStructuralAndMalware();
 });
 </script>
 </body>
